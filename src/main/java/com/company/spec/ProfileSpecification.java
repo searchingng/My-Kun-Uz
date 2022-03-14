@@ -16,50 +16,26 @@ public class ProfileSpecification {
                 criteriaBuilder.isNotNull(root.get("id"));
     }
 
-    public static Specification<ProfileEntity> equal(Specification<ProfileEntity> spec,
-                                                     String field, Object o){
-        if (!Objects.isNull(o)){
-            return spec.and(
-                    (root, query, criteriaBuilder) ->
-                            criteriaBuilder.equal(root.get(field), o)
-            );
-        }
-        return spec;
+    public static Specification<ProfileEntity> equal(String field, Object o){
+        return (root, query, criteriaBuilder) ->
+                            criteriaBuilder.equal(root.get(field), o);
     }
 
-    public static Specification<ProfileEntity> fromDate(Specification<ProfileEntity> spec,
-                                                        LocalDate date){
-        if (!Objects.isNull(date)){
-            return spec.and(
-                    (root, query, criteriaBuilder) ->
+    public static Specification<ProfileEntity> fromDate(LocalDate date){
+        return (root, query, criteriaBuilder) ->
                             criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"),
-                                    LocalDateTime.of(date, LocalTime.MIN))
-            );
-        }
-        return spec;
+                                    LocalDateTime.of(date, LocalTime.MIN));
     }
 
-    public static Specification<ProfileEntity> toDate(Specification<ProfileEntity> spec,
-                                                      LocalDate date){
-        if (!Objects.isNull(date)){
-            return spec.and(
-                    (root, query, criteriaBuilder) ->
+    public static Specification<ProfileEntity> toDate(LocalDate date){
+        return (root, query, criteriaBuilder) ->
                             criteriaBuilder.lessThanOrEqualTo(root.get("createdDate"),
-                                    LocalDateTime.of(date, LocalTime.MAX))
-            );
-        }
-        return spec;
+                                    LocalDateTime.of(date, LocalTime.MAX));
     }
 
-    public static Specification<ProfileEntity> likeDouble(Specification<ProfileEntity> spec,
-                                                     String field, String value){
-        if (!Objects.isNull(value)){
-            return spec.and(
-                    (root, query, criteriaBuilder) ->
-                            criteriaBuilder.like(root.get(field), "%" + value + "%")
-            );
-        }
-        return spec;
+    public static Specification<ProfileEntity> likeDouble(String field, String value){
+        return (root, query, criteriaBuilder) ->
+                            criteriaBuilder.like(root.get(field), "%" + value + "%");
     }
 
 

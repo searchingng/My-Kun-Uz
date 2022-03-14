@@ -114,14 +114,30 @@ public class ProfileService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(split[1]), split[0]));
         Specification<ProfileEntity> spec = idIsNotNull();
-        spec = equal(spec, "id", dto.getId());
-        spec = likeDouble(spec, "name", dto.getName());
-        spec = likeDouble(spec, "surname", dto.getSurname());
-        spec = equal(spec, "email", dto.getEmail());
-        spec = equal(spec, "role", dto.getRole());
-        spec = equal(spec, "status", dto.getStatus());
-        spec = fromDate(spec, dto.getFromDate());
-        spec = toDate(spec, dto.getToDate());
+        if (dto.getId() != null) {
+            spec.and(equal("id", dto.getId()));
+        }
+        if (dto.getName() != null) {
+            spec.and(likeDouble("name", dto.getName()));
+        }
+        if (dto.getSurname() != null) {
+            spec.and(likeDouble("surname", dto.getSurname()));
+        }
+        if (dto.getEmail() != null) {
+            spec.and(equal("email", dto.getEmail()));
+        }
+        if (dto.getRole() != null) {
+            spec.and(equal("role", dto.getRole()));
+        }
+        if (dto.getStatus() != null) {
+            spec.and(equal("status", dto.getStatus()));
+        }
+        if (dto.getFromDate() != null) {
+            spec.and(fromDate(dto.getFromDate()));
+        }
+        if (dto.getToDate() != null) {
+            spec.and(toDate(dto.getToDate()));
+        }
 
 
         Page<ProfileEntity> entityPage = profileRepository.findAll(spec, pageable);

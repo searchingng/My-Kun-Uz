@@ -67,6 +67,14 @@ public class ArticleService {
                 .orElseThrow(() -> new RuntimeException("Bunday article NOT EXIST"));
     }
 
+    public String publish(Integer id, Integer userId){
+        ArticleEntity entity = get(id);
+        ProfileEntity publisher = profileService.get(userId);
+        entity.setPublisher(publisher);
+        entity.setPublishedDate(LocalDateTime.now());
+        return "Published";
+    }
+
     public String update(ArticleDTO dto){
         ArticleDTO old = getById(dto.getId());
 
@@ -123,6 +131,7 @@ public class ArticleService {
 
     public Page<ArticleDTO> filterSpecification(int page, int size, ArticleFilterDTO dto){
         Pageable pageable = PageRequest.of(page, size);
+        ProfileEntity profile = profileService.get(dto.getProfileId());
 
         Specification<ArticleEntity> spec = null;
         if (dto.getStatus() != null) {
@@ -130,11 +139,21 @@ public class ArticleService {
         } else {
             spec = Specification.where(ArticleSpecification.status(ArticleStatus.PUBLISHED));
         }
-        spec = ArticleSpecification.equal(spec, "id", dto.getId());
-        spec = ArticleSpecification.equal(spec, "profile", profileService.get(dto.getProfileId()));
-        spec = ArticleSpecification.like(spec, "title", dto.getTitle());
-        spec = ArticleSpecification.greaterThanOrEqualTo(spec, "createdDate", dto.getFromDate());
-        spec = ArticleSpecification.lessThanOrEqualTo(spec, "createdDate", dto.getToDate());
+        if (dto.getId() != null) {
+            ArticleSpecification.equal("id", dto.getId());
+        }
+        if (dto.getProfileId() != null) {
+            spec.and(ArticleSpecification.equal("profile", profile));
+        }
+        if (dto.getTitle() != null) {
+            spec.and(ArticleSpecification.like("title", dto.getTitle()));
+        }
+        if (dto.getFromDate() != null) {
+            spec.and(ArticleSpecification.greaterThanOrEqualTo("createdDate", dto.getFromDate()));
+        }
+        if (dto.getToDate() != null) {
+            spec.and(ArticleSpecification.lessThanOrEqualTo("createdDate", dto.getToDate()));
+        }
 
         Page<ArticleEntity> entitiyPage = articleRepository.findAll(spec, pageable);
         List<ArticleDTO> content = entitiyPage.getContent().stream()

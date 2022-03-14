@@ -5,20 +5,25 @@ import com.company.dto.ProfileJwtDTO;
 import com.company.enums.LikeStatus;
 import com.company.service.LikeService;
 import com.company.util.JwtUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/like")
+@Api(tags = "Like Controller")
 public class LikeController {
 
     @Autowired
     private LikeService likeService;
 
     @PostMapping
+    @ApiOperation(value = "Like Bosss", notes = "auth kerak")
     public ResponseEntity like(@RequestBody LikeDTO dto,
                                HttpServletRequest request){
         ProfileJwtDTO jwtDTO = JwtUtil.getProfile(request);
@@ -26,18 +31,22 @@ public class LikeController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "update", notes = "auth kerak")
     public ResponseEntity update(@RequestBody LikeDTO dto,
                                  @PathVariable("id") Long id,
                                  HttpServletRequest request){
         ProfileJwtDTO jwtDTO = JwtUtil.getProfile(request);
+        // TODO: O'zlikni tekshir
         likeService.updateById(id, dto);
         return ResponseEntity.ok("SUCCESS");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity update(@PathVariable("id") Long id,
+    @ApiOperation(value = "Deleting like", notes = "auth kerak")
+    public ResponseEntity delete(@PathVariable("id") Long id,
                                  HttpServletRequest request){
         ProfileJwtDTO jwtDTO = JwtUtil.getProfile(request);
+        // TODO: O'zlikni tekshir
         likeService.deleteById(id);
         return ResponseEntity.ok("SUCCESS");
     }

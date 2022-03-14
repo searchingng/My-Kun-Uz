@@ -6,14 +6,18 @@ import com.company.enums.Role;
 import com.company.service.ProfileService;
 import com.company.service.RegionService;
 import com.company.util.JwtUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/region")
+@Api(tags = "Regions", value = "Bunda ham faqat admin_role")
 public class RegionController {
 
     @Autowired
@@ -22,7 +26,8 @@ public class RegionController {
     private ProfileService profileService;
 
     @PostMapping
-    public ResponseEntity create(@RequestBody RegionDTO dto,
+    @ApiOperation("create region")
+    public ResponseEntity create(@Valid @RequestBody RegionDTO dto,
                                  HttpServletRequest request) {
 
         ProfileJwtDTO jwtDTO = JwtUtil.getProfile(request, Role.ADMIN_ROLE);
@@ -33,7 +38,8 @@ public class RegionController {
     }
 
     @PutMapping
-        public ResponseEntity update(@RequestBody RegionDTO dto,
+    @ApiOperation("update region")
+    public ResponseEntity update(@RequestBody RegionDTO dto,
                                   HttpServletRequest request) {
 
         ProfileJwtDTO jwtDTO = JwtUtil.getProfile(request, Role.ADMIN_ROLE);
@@ -43,6 +49,7 @@ public class RegionController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation("delete region")
     public ResponseEntity deleteById(@PathVariable Integer id,
                                      HttpServletRequest request){
 
@@ -54,6 +61,7 @@ public class RegionController {
     }
 
     @GetMapping
+    @ApiOperation("get ALL List")
     public ResponseEntity getAll(HttpServletRequest request){
         ProfileJwtDTO jwtDTO = JwtUtil.getProfile(request);
 
@@ -62,6 +70,7 @@ public class RegionController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation("@ApiOperation(value = \"getById methodi\")")
     public ResponseEntity getById(@PathVariable Integer id,
                                   HttpServletRequest request){
 

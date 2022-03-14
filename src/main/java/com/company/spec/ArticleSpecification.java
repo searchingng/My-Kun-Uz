@@ -30,49 +30,29 @@ public class ArticleSpecification {
         });
     }
 
-    public static Specification<ArticleEntity> equal(Specification<ArticleEntity> spec, String field, Object o) {
-        if (o != null){
-            return spec.and((root, query, criteriaBuilder) -> {
-                return criteriaBuilder.equal(root.get(field), o);
-            });
-        }
-        return spec;
+    public static Specification<ArticleEntity> equal(String field, Object o) {
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.equal(root.get(field), o);
+        };
     }
 
-    public static Specification<ArticleEntity> like(Specification<ArticleEntity> spec, String field, String value) {
-        if (value != null){
-            return spec.and((root, query, criteriaBuilder) -> {
-                return criteriaBuilder.like(root.get(field), "%" + value + "%");
-            });
-        }
-        return spec;
+    public static Specification<ArticleEntity> like(String field, String value) {
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.like(root.get(field), "%" + value + "%");
+        };
     }
 
-    public static Specification<ArticleEntity> greaterThanOrEqualTo(
-            Specification<ArticleEntity> spec,
-            String field,
-            LocalDate date) {
-        if (date != null){
-            return spec.and(
-                    (root, query, criteriaBuilder) ->
-                    criteriaBuilder.greaterThanOrEqualTo(root.get(field),
-                        LocalDateTime.of(date, LocalTime.MIN))
-            );
-        }
-        return spec;
+    public static Specification<ArticleEntity> greaterThanOrEqualTo(String field, LocalDate date) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.greaterThanOrEqualTo(root.get(field),
+                    LocalDateTime.of(date, LocalTime.MIN));
+
     }
 
-    public static Specification<ArticleEntity> lessThanOrEqualTo(
-            Specification<ArticleEntity> spec,
-            String field,
-            LocalDate date) {
-        if (date != null){
-            return spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.lessThanOrEqualTo(root.get(field),
-                            LocalDateTime.of(date, LocalTime.MAX))
-            );
-        }
-        return spec;
+    public static Specification<ArticleEntity> lessThanOrEqualTo(String field, LocalDate date) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.lessThanOrEqualTo(root.get(field),
+                        LocalDateTime.of(date, LocalTime.MAX));
     }
 
 }

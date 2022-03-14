@@ -10,44 +10,26 @@ import java.util.Objects;
 
 public class CommentSpecification {
 
-    public static Specification<CommentEntity> idIsNotNull(){
+    public static Specification<CommentEntity> idIsNotNull(String field) {
         return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.isNotNull(root.get("id")));
+                criteriaBuilder.isNotNull(root.get(field)));
     }
 
-    public static Specification<CommentEntity> equal(Specification<CommentEntity> spec,
-                                                     String field, Object o){
-        if (!Objects.isNull(o)){
-            return spec.and(
-                    (root, query, criteriaBuilder) ->
-                            criteriaBuilder.equal(root.get(field), o)
-            );
-        }
-        return spec;
+    public static Specification<CommentEntity> equal(String field, Object o) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(field), o);
     }
 
-    public static Specification<CommentEntity> fromDate(Specification<CommentEntity> spec,
-                                                        LocalDate date){
-        if (!Objects.isNull(date)){
-            return spec.and(
-                    (root, query, criteriaBuilder) ->
-                            criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"),
-                                    LocalDateTime.of(date, LocalTime.MIN))
-            );
-        }
-        return spec;
+    public static Specification<CommentEntity> fromDate(LocalDate date) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"),
+                        LocalDateTime.of(date, LocalTime.MIN));
     }
 
-    public static Specification<CommentEntity> toDate(Specification<CommentEntity> spec,
-                                                        LocalDate date){
-        if (!Objects.isNull(date)){
-            return spec.and(
-                    (root, query, criteriaBuilder) ->
-                            criteriaBuilder.lessThanOrEqualTo(root.get("createdDate"),
-                                    LocalDateTime.of(date, LocalTime.MAX))
-            );
-        }
-        return spec;
+    public static Specification<CommentEntity> toDate(LocalDate date) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.lessThanOrEqualTo(root.get("createdDate"),
+                        LocalDateTime.of(date, LocalTime.MAX));
     }
 
 }

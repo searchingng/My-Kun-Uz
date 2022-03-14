@@ -6,6 +6,9 @@ import com.company.dto.filterDTO.ProfileFilterDTO;
 import com.company.enums.Role;
 import com.company.service.ProfileService;
 import com.company.util.JwtUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +18,15 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/profile")
+@Api(tags = "Profile Control", value = "Bu Controllerni faqat ADMIN aka ishlata oladi")
 public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
     @PostMapping
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "@ApiResponse(code = 400, message = \"...\")")
+    })
     public ResponseEntity create(@Valid @RequestBody ProfileDTO dto,
                                              HttpServletRequest request) {
 

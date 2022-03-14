@@ -130,12 +130,23 @@ public class CommentService {
         Pageable pageable = PageRequest
                 .of(page, size, Sort.by(Sort.Direction.fromString(split[1]), split[0]));
 
-        Specification<CommentEntity> spec = Specification.where(CommentSpecification.idIsNotNull());
-        spec = CommentSpecification.equal(spec, "id", dto.getId());
-        spec = CommentSpecification.equal(spec, "profile", profile);
-        spec = CommentSpecification.equal(spec, "article", article);
-        spec = CommentSpecification.fromDate(spec, dto.getFromDate());
-        spec = CommentSpecification.toDate(spec, dto.getToDate());
+        Specification<CommentEntity> spec =
+                Specification.where(CommentSpecification.idIsNotNull("id"));
+        if (dto.getId() != null) {
+            spec.and(CommentSpecification.equal("id", dto.getId()));
+        }
+        if (dto.getProfileId() != null) {
+            spec.and(CommentSpecification.equal("profile", profile));
+        }
+        if (dto.getArticleId() != null) {
+            spec.and(CommentSpecification.equal("article", article));
+        }
+        if (dto.getFromDate() != null) {
+            spec.and(CommentSpecification.fromDate(dto.getFromDate()));
+        }
+        if (dto.getToDate() != null) {
+            spec.and(CommentSpecification.toDate(dto.getToDate()));
+        }
 
         Page<CommentEntity> entityPage = commentRepository.findAll(spec, pageable);
         List<CommentDTO> dtos = entityPage.getContent().stream()

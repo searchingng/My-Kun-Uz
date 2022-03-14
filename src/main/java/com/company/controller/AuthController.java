@@ -32,13 +32,19 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    @ApiOperation(value = "Registration Method")
+    @ApiOperation(value = "Registration", notes = "without Token")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Server error"),
+            @ApiResponse(code = 404, message = "Service not found"),
+            @ApiResponse(code = 200, message = "Successful retrieval",
+                    response = ProfileDTO.class, responseContainer = "List") })
     public ResponseEntity registration(@Valid @RequestBody RegistrationDTO dto) {
         authService.registration(dto);
         return ResponseEntity.ok("Successfully!!!");
     }
 
     @GetMapping("/verification/{jwt}")
+    @ApiOperation(value = "Verify account by Email")
     public ResponseEntity verify(@ApiParam(value = "id", required = true, example = "This id Id")
                                  @PathVariable String jwt){
         authService.verify(jwt);
